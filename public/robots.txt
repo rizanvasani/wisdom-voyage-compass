@@ -12,3 +12,6 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /checkout
+
+Sitemap: https://www.wisdomtravelandtours.com/sitemap.xml

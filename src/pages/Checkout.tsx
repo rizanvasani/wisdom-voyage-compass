@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Toast, ToastProvider, ToastViewport, ToastTitle, ToastDescription, ToastClose } from '@/components/ui/toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
 
@@ -373,6 +374,12 @@ const Checkout = () => {
   return (
     <ToastProvider>
       <div className="min-h-screen flex flex-col bg-gray-50">
+        <SEO
+          title="Checkout"
+          description="Complete your booking with Wisdom Travel and Tours."
+          path="/checkout"
+          noIndex
+        />
         <Header />
         <section className="py-8 sm:py-12 container mx-auto px-4 sm:px-6">
           <Button

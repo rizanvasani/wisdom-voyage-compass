@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Users, Award, Globe, Heart, Shield, Clock, Star, CheckCircle, ArrowRight, MapPin, MessageCircle, Quote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import SEO from '@/components/SEO';
 
 const About = () => {
   const navigate = useNavigate();
@@ -62,6 +63,11 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      <SEO
+        title="About Us"
+        description="Founded in 2019 in Mumbai, Wisdom Travel and Tours has helped 10,000+ travelers explore 150+ destinations. Learn about our story, values, and travel experts."
+        path="/about"
+      />
       <Header />
 
       {/* ── HERO ── */}

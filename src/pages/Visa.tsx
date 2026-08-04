@@ -4,6 +4,7 @@ import { CheckCircle, Clock, FileText, Users, Phone, MessageCircle, ArrowRight, 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
+import SEO from '@/components/SEO';
 
 // --- TYPES ---
 interface VisaResult {
@@ -349,6 +350,11 @@ const Visa = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      <SEO
+        title="Visa Services & Requirement Checker"
+        description="Check visa requirements for any destination and get expert visa application support from Wisdom Travel and Tours. Fast, reliable visa assistance for all nationalities."
+        path="/visa"
+      />
       <Header />
 
       {/* HERO */}

@@ -13,6 +13,7 @@ import { Calendar, Users, MapPin, Phone, Mail, Send, Plane, Hotel, FileText, Shi
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const planTripSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -190,6 +191,11 @@ const PlanTrip = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      <SEO
+        title="Plan Your Trip"
+        description="Tell us your travel dreams and Wisdom Travel and Tours will craft a custom itinerary — destinations, dates, budget, and preferences, all in one simple form."
+        path="/plan-trip"
+      />
       <Header />
 
       {/* Hero */}

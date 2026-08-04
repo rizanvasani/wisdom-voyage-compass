@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Star, MapPin, Calendar, Users, ArrowRight, Compass, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import SEO from '@/components/SEO';
 
 const CARDS_PER_PAGE = 4;
 
@@ -296,6 +297,11 @@ const Packages = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      <SEO
+        title="Domestic & International Holiday Packages"
+        description="Browse curated domestic and international travel packages from Wisdom Travel and Tours — Golden Triangle, Kerala, Goa, Bali, Europe & more, with flexible group sizes."
+        path="/packages"
+      />
       <Header />
 
       {/* Hero */}

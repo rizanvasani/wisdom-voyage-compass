@@ -4,21 +4,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Fallback tags for the pre-JS paint / non-JS crawlers. Every route overrides
+       title, description, canonical, and OG/Twitter tags via the SEO component (react-helmet-async). -->
   <title>Wisdom Travel and Tours - Premium Travel Experiences</title>
-  <meta name="description"
-    content="Discover the world with Wisdom Travel and Tours. Premium domestic and international travel packages, flight bookings, and visa services." />
   <meta name="author" content="Wisdom Travel and Tours" />
-
-  <meta property="og:title" content="Wisdom Travel and Tours - Premium Travel Experiences" />
-  <meta property="og:description"
-    content="Discover the world with Wisdom Travel and Tours. Premium domestic and international travel packages, flight bookings, and visa services." />
-  <meta property="og:type" content="website" />
+  <meta name="robots" content="index, follow" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
     rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "name": "Wisdom Travel and Tours",
+    "url": "https://www.wisdomtravelandtours.com/",
+    "logo": "https://www.wisdomtravelandtours.com/WisdomLogo.png",
+    "image": "https://www.wisdomtravelandtours.com/WisdomLogo.png",
+    "telephone": "+91-9856664440",
+    "email": "sales@wisdomtravel.in",
+    "priceRange": "₹₹",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Dheeraj Heritage, Santacruz (West)",
+      "addressLocality": "Mumbai",
+      "addressRegion": "Maharashtra",
+      "postalCode": "400054",
+      "addressCountry": "IN"
+    },
+    "sameAs": []
+  }
+  </script>
 </head>
 
 <body>

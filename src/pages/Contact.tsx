@@ -8,6 +8,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import emailjs from '@emailjs/browser';
 import { toast } from 'sonner';
+import SEO from '@/components/SEO';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -97,6 +98,11 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
+      <SEO
+        title="Contact Us"
+        description="Get in touch with Wisdom Travel and Tours in Santacruz, Mumbai. Call, email, or WhatsApp us to plan your next domestic or international trip."
+        path="/contact"
+      />
       <Header />
 
       {/* ── HERO ── */}
