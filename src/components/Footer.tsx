@@ -32,7 +32,7 @@ const Footer = () => {
 
   const socials = [
     { Icon: Facebook, label: 'Facebook', href: '#' },
-    { Icon: Instagram, label: 'Instagram', href: '#' },
+    { Icon: Instagram, label: 'Instagram', href: 'https://www.instagram.com/wisdomtravelandtours/' },
     // { Icon: Twitter, label: 'Twitter', href: '#' },
     // { Icon: Linkedin, label: 'LinkedIn', href: '#' },
   ];
@@ -42,7 +42,7 @@ const Footer = () => {
   const handlePhoneClick = () => window.open('tel:+919856664440', '_self');
   const handleEmailClick = () => window.open('mailto:sales@wisdomtravel.in', '_self');
   const handleMapClick = () =>
-    window.open('https://maps.google.com/?q=Dheeraj+Heritage+Santacruz+West+Mumbai', '_blank');
+    window.open('https://www.google.com/maps/place/Wisdom+Travel+and+Tours/@19.0897983,72.8377711,17z/data=!3m1!4b1!4m6!3m5!1s0x3be7c933d62324e3:0x6d5203898e11bf83!8m2!3d19.0897983!4d72.8377711!16s%2Fg%2F11j014gg7_', '_blank');
 
   return (
     <footer className="bg-gradient-to-br from-red-50 via-white to-red-50 relative overflow-hidden">

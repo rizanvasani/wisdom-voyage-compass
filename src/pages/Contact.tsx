@@ -285,7 +285,7 @@ const Contact = () => {
                     label: 'Address',
                     content: (
                       <button
-                        onClick={() => window.open('https://maps.google.com/?q=Dheeraj+Heritage+Santacruz+West+Mumbai', '_blank')}
+                        onClick={() => window.open('https://www.google.com/maps/place/Wisdom+Travel+and+Tours/@19.0897983,72.8377711,17z/data=!3m1!4b1!4m6!3m5!1s0x3be7c933d62324e3:0x6d5203898e11bf83!8m2!3d19.0897983!4d72.8377711!16s%2Fg%2F11j014gg7_', '_blank')}
                         className="text-xs text-slate-500 leading-relaxed text-left hover:text-primary transition-colors"
                       >
                         G-14, Ground Floor, Dheeraj Heritage,<br />
@@ -316,10 +316,10 @@ const Contact = () => {
                     label: 'Email',
                     content: (
                       <button
-                        onClick={() => window.open('mailto:sales@wisdomtravel.co.in', '_self')}
+                        onClick={() => window.open('mailto:sales@wisdomtravel.in', '_self')}
                         className="text-xs text-slate-500 hover:text-primary transition-colors"
                       >
-                        sales@wisdomtravel.co.in
+                        sales@wisdomtravel.in
                       </button>
                     )
                   },
@@ -368,7 +368,7 @@ const Contact = () => {
               {/* Map embed */}
               <div className="rounded-3xl overflow-hidden border border-slate-100 shadow-sm h-48">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.5!2d72.8397!3d19.0748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDA0JzI5LjMiTiA3MsKwNTAnMjIuOSJF!5e0!3m2!1sen!2sin!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.5!2d72.8377711!3d19.0897983!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c933d62324e3%3A0x6d5203898e11bf83!2sWisdom%20Travel%20and%20Tours!5e0!3m2!1sen!2sin!4v1691234567890"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
