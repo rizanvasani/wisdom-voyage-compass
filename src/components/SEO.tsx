@@ -10,11 +10,13 @@ interface SEOProps {
   path: string;
   image?: string;
   noIndex?: boolean;
+  /** When false, `title` is used as-is instead of appending " | Wisdom Travel and Tours". */
+  appendSiteName?: boolean;
 }
 
-const SEO = ({ title, description, path, image = DEFAULT_IMAGE, noIndex = false }: SEOProps) => {
+const SEO = ({ title, description, path, image = DEFAULT_IMAGE, noIndex = false, appendSiteName = true }: SEOProps) => {
   const url = `${SITE_URL}${path}`;
-  const fullTitle = `${title} | ${SITE_NAME}`;
+  const fullTitle = appendSiteName ? `${title} | ${SITE_NAME}` : title;
 
   return (
     <Helmet>

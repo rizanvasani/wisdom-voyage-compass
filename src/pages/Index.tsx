@@ -11,9 +11,10 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <SEO
-        title="Premium Travel Agency in Mumbai"
+        title="Travel Agency in Mumbai | Tour & Holiday Packages | Wisdom Travel"
         description="Wisdom Travel and Tours is a premium travel agency in Santacruz, Mumbai offering domestic & international holiday packages, flight bookings, and visa services."
         path="/"
+        appendSiteName={false}
       />
       <Header />
       <Hero />
