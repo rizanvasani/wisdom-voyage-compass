@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
+import { EnquiryModal } from '@/components/EnquiryModal';
 
 // --- TYPES ---
 interface VisaResult {
@@ -327,14 +328,10 @@ const Visa = () => {
     }
   };
 
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
+
   const handleWhatsAppClick = () => {
-    let text = 'Hello, I would like to inquire about visa services.';
-    if (passport && destination && countryCodes[passport] && countryCodes[destination]) {
-      const pCode = countryCodes[passport];
-      const dCode = countryCodes[destination];
-      text = `Hello, I would like to inquire about visa services.\n\nPassport Country:\n${getFlagEmoji(pCode)} ${passport}\n\nDestination Country:\n✈️ ${destination}`;
-    }
-    window.open(`https://wa.me/9856664440?text=${encodeURIComponent(text)}`, '_blank');
+    setEnquiryOpen(true);
   };
   const handlePhoneClick = () =>
     window.open('tel:+919856664440', '_self');
@@ -589,6 +586,16 @@ const Visa = () => {
       </section>
 
       <Footer />
+
+      <EnquiryModal
+        open={enquiryOpen}
+        onOpenChange={setEnquiryOpen}
+        sourceContext="visa"
+        defaultValues={{
+          needs: ['Visa'],
+          notes: passport && destination ? `Visa Inquiry: Passport (${passport}), Destination (${destination})` : ''
+        }}
+      />
     </div>
   );
 };

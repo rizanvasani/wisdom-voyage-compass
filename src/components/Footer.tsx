@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { MessageCircle, Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, ArrowUpRight, Icon } from 'lucide-react';
+import { EnquiryModal } from '@/components/EnquiryModal';
 
 const Footer = () => {
   const navigate = useNavigate();
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
 
   const quickLinks = [
     { name: 'Tour Packages', href: '/packages' },
@@ -22,10 +25,9 @@ const Footer = () => {
   ];
 
   const destinations = [
-    { name: 'Switzerland', id: 'Switzerland' },
-    { name: 'Iceland', id: 'Iceland' },
-    { name: 'Nepal', id: 'Nepal' },
-    { name: 'Goa', id: 'Goa' },
+    { name: 'Dubai', id: 'Dubai' },
+    { name: 'Bali', id: 'Bali' },
+    { name: 'Thailand', id: 'Thailand' },
     { name: 'Kerala', id: 'Kerala' },
     { name: 'Rajasthan', id: 'Rajasthan' },
   ];
@@ -37,8 +39,9 @@ const Footer = () => {
     // { Icon: Linkedin, label: 'LinkedIn', href: '#' },
   ];
 
-  const handleWhatsAppClick = () =>
-    window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about your travel services.', '_blank');
+  const handleWhatsAppClick = () => {
+    setEnquiryOpen(true);
+  };
   const handlePhoneClick = () => window.open('tel:+919856664440', '_self');
   const handleEmailClick = () => window.open('mailto:sales@wisdomtravel.in', '_self');
   const handleMapClick = () =>
@@ -207,9 +210,19 @@ const Footer = () => {
           <p className="text-gray-600 text-sm font-medium">
             © 2025 Wisdom Travel & Tours. All rights reserved.
           </p>
+          <div className="flex items-center gap-4 text-xs text-gray-500">
+            <Link to="/admin" className="hover:text-red-600 transition-colors flex items-center gap-1 font-medium">
+              Admin Portal
+            </Link>
+          </div>
         </div>
 
       </div>
+      <EnquiryModal
+        open={enquiryOpen}
+        onOpenChange={setEnquiryOpen}
+        sourceContext="footer"
+      />
     </footer>
   );
 };

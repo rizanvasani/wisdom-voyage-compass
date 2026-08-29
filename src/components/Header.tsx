@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Phone, MessageCircle } from 'lucide-react';
+import { EnquiryModal } from '@/components/EnquiryModal';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,7 +56,8 @@ const Header = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const handleWhatsAppClick = () => {
-    window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about your travel services.', '_blank');
+    setEnquiryOpen(true);
+    setIsMenuOpen(false);
   };
 
   const handleContactClick = () => {
@@ -203,6 +206,12 @@ const Header = () => {
           </Button>
         </div>
       </div>
+
+      <EnquiryModal
+        open={enquiryOpen}
+        onOpenChange={setEnquiryOpen}
+        sourceContext="whatsapp_header"
+      />
     </>
   );
 };

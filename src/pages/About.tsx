@@ -1,15 +1,19 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Users, Award, Globe, Heart, Shield, Clock, Star, CheckCircle, ArrowRight, MapPin, MessageCircle, Quote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '@/components/SEO';
+import { EnquiryModal } from '@/components/EnquiryModal';
 
 const About = () => {
   const navigate = useNavigate();
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
 
-  const handleWhatsAppClick = () =>
-    window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about your travel services.', '_blank');
+  const handleWhatsAppClick = () => {
+    setEnquiryOpen(true);
+  };
 
   const stats = [
     { icon: Users, label: 'Happy Travelers', value: '10,000+', color: 'bg-blue-50 text-blue-600' },
@@ -484,6 +488,12 @@ const About = () => {
       </section>
 
       <Footer />
+
+      <EnquiryModal
+        open={enquiryOpen}
+        onOpenChange={setEnquiryOpen}
+        sourceContext="about"
+      />
     </div>
   );
 };

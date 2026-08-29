@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -20,9 +21,11 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { EnquiryModal } from '@/components/EnquiryModal';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
 
   const stats = [
     { icon: Users, label: 'Happy Travelers', value: '10,000+', color: 'text-blue-400' },
@@ -66,9 +69,7 @@ const Hero = () => {
   };
 
   const handleWhatsAppClick = () => {
-    const phoneNumber = '7042434631';
-    const message = encodeURIComponent('Hi! I\'m interested in planning a trip with Wisdom Travel & Tours. Can you help me?');
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+    setEnquiryOpen(true);
   };
 
   return (
@@ -328,10 +329,13 @@ const Hero = () => {
           animation: spin 3s linear infinite;
         }
         
-        .animation-delay-300 {
-          animation-delay: 300ms;
-        }
       `}</style>
+
+      <EnquiryModal
+        open={enquiryOpen}
+        onOpenChange={setEnquiryOpen}
+        sourceContext="hero_whatsapp"
+      />
     </>
   );
 };

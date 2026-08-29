@@ -9,6 +9,8 @@ import Footer from '@/components/Footer';
 import emailjs from '@emailjs/browser';
 import { toast } from 'sonner';
 import SEO from '@/components/SEO';
+import { EnquiryModal } from '@/components/EnquiryModal';
+import { createEnquiryRecord, createInquiry } from '@/lib/supabase-services';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
 
   const handleInputChange = (field: string, value: string) =>
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -30,21 +33,31 @@ const Contact = () => {
     const commonParams = {
       from_name: fullName,
       from_email: formData.email,
-      phone: `+91 ${formData.mobile}`,
-      destination: '',
-      travel_dates: '',
-      adults: '',
-      children: '',
-      budget: '',
-      trip_type: '',
-      requirements: '',
-      notes: formData.message,
+      phone: formData.mobile,
+      message: formData.message,
     };
 
     try {
-      const [teamResult, userResult] = await Promise.allSettled([
+      // Save lead to Supabase
+      await createInquiry({
+        name: fullName,
+        email: formData.email,
+        phone: formData.mobile,
+        destination: 'Contact Us Form',
+        notes: formData.message,
+        status: 'Pending'
+      });
 
-        // 1️⃣ Rizan gets the contact message
+      await createEnquiryRecord({
+        package_title: 'Contact Us Inquiry',
+        name: fullName,
+        email: formData.email,
+        phone: formData.mobile,
+        notes: formData.message,
+        source: 'contact'
+      });
+
+      const [teamResult, userResult] = await Promise.allSettled([
         emailjs.send(
           'service_7jd4cv7',
           'template_66u4wg8',
@@ -55,8 +68,6 @@ const Contact = () => {
           },
           'IyzAcrjwMY4P_StOx'
         ),
-
-        // 2️⃣ Customer gets auto-reply
         emailjs.send(
           'service_7jd4cv7',
           'template_98kngzo',
@@ -68,15 +79,7 @@ const Contact = () => {
           },
           'IyzAcrjwMY4P_StOx'
         ),
-
       ]);
-
-      if (teamResult.status === 'rejected') {
-        console.error('Team email failed:', teamResult.reason);
-      }
-      if (userResult.status === 'rejected') {
-        console.error('Auto-reply failed:', userResult.reason);
-      }
 
       if (teamResult.status === 'fulfilled') {
         setSubmitted(true);
@@ -85,7 +88,6 @@ const Contact = () => {
       } else {
         toast.error('Something went wrong. Please try again or WhatsApp us directly.');
       }
-
     } catch (err) {
       console.error(err);
       toast.error('Something went wrong. Please try again or WhatsApp us directly.');
@@ -93,8 +95,65 @@ const Contact = () => {
       setIsSubmitting(false);
     }
   };
-  const handleWhatsAppClick = () =>
-    window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about your travel services.', '_blank');
+
+  const handleWhatsAppClick = () => {
+    setEnquiryOpen(true);
+  };
+
+  const handleWhatsAppSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+
+    const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+    if (!formData.firstName || !formData.firstName.trim()) {
+      toast.error('Please enter your First Name before sending on WhatsApp.');
+      return;
+    }
+    if (!formData.mobile || !formData.mobile.trim()) {
+      toast.error('Please enter your Phone/Mobile Number before sending on WhatsApp.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // 1. Save customer details to Supabase enquiries table
+      await createEnquiryRecord({
+        package_title: 'Contact Us Inquiry',
+        package_id: null,
+        name: fullName,
+        email: formData.email ? formData.email.trim() : null,
+        phone: formData.mobile.trim(),
+        notes: formData.message || null,
+        source: 'contact'
+      });
+
+      await createInquiry({
+        name: fullName,
+        email: formData.email || 'contact@lead.com',
+        phone: formData.mobile.trim(),
+        destination: 'Contact Us Page',
+        notes: `[Contact Form WhatsApp] ${formData.message || ''}`,
+        status: 'Pending'
+      });
+
+      // 2. Construct rich pre-filled WhatsApp message
+      const msgLines = [
+        `Hello Wisdom Travel!`,
+        `*Name:* ${fullName}`,
+        `*Phone:* ${formData.mobile}`,
+        formData.email ? `*Email:* ${formData.email}` : '',
+        `*Message:* ${formData.message || 'I would like to inquire about your travel services.'}`
+      ].filter(Boolean).join('\n');
+
+      const whatsappUrl = `https://wa.me/9856664440?text=${encodeURIComponent(msgLines)}`;
+      toast.success('Your details have been saved! Opening WhatsApp...');
+      window.open(whatsappUrl, '_blank');
+    } catch (err) {
+      console.error('Error recording contact WhatsApp lead:', err);
+      window.open('https://wa.me/9856664440?text=Hello, I would like to inquire about your travel services.', '_blank');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -249,23 +308,35 @@ const Contact = () => {
                       />
                     </div>
 
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full h-12 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold text-sm gap-2 shadow-lg shadow-primary/20 disabled:opacity-60"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                          </svg>
-                          Sending...
-                        </>
-                      ) : (
-                        <><Send className="w-4 h-4" /> Send Message</>
-                      )}
-                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                      <Button
+                        type="button"
+                        onClick={handleWhatsAppSubmit}
+                        disabled={isSubmitting}
+                        className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-sm gap-2 shadow-md shadow-emerald-600/20 disabled:opacity-60"
+                      >
+                        <MessageCircle className="w-4 h-4 fill-white" />
+                        Send on WhatsApp
+                      </Button>
+
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="flex-1 h-12 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold text-sm gap-2 shadow-lg shadow-primary/20 disabled:opacity-60"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                            </svg>
+                            Sending...
+                          </>
+                        ) : (
+                          <><Send className="w-4 h-4" /> Send Message (Email)</>
+                        )}
+                      </Button>
+                    </div>
 
                   </form>
                 </div>
@@ -385,6 +456,18 @@ const Contact = () => {
       </section>
 
       <Footer />
+
+      <EnquiryModal
+        open={enquiryOpen}
+        onOpenChange={setEnquiryOpen}
+        sourceContext="contact"
+        defaultValues={{
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          phone: formData.mobile,
+          notes: formData.message
+        }}
+      />
     </div>
   );
 };

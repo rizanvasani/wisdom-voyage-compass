@@ -14,7 +14,120 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      packages: {
+        Row: {
+          id: string
+          name: string
+          title: string | null
+          category: string
+          location: string
+          duration: string
+          price: string
+          rating: number | null
+          reviews: number | null
+          image: string
+          highlights: string[] | null
+          group_size: string | null
+          tag: string | null
+          itinerary_url: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name?: string
+          title?: string | null
+          category: string
+          location: string
+          duration: string
+          price: string
+          rating?: number | null
+          reviews?: number | null
+          image: string
+          highlights?: string[] | null
+          group_size?: string | null
+          tag?: string | null
+          itinerary_url?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          title?: string | null
+          category?: string
+          location?: string
+          duration?: string
+          price?: string
+          rating?: number | null
+          reviews?: number | null
+          image?: string
+          highlights?: string[] | null
+          group_size?: string | null
+          tag?: string | null
+          itinerary_url?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      enquiries: {
+        Row: {
+          id: string
+          package_title: string
+          package_id: string | null
+          name: string | null
+          email: string | null
+          phone: string | null
+          travel_date: string | null
+          travel_date_from: string | null
+          travel_date_to: string | null
+          budget_per_person: string | null
+          needs: string[] | null
+          adults: number | null
+          children: number | null
+          notes: string | null
+          source: string
+          itinerary_url: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          package_title: string
+          package_id?: string | null
+          name?: string | null
+          email?: string | null
+          phone?: string | null
+          travel_date?: string | null
+          travel_date_from?: string | null
+          travel_date_to?: string | null
+          budget_per_person?: string | null
+          needs?: string[] | null
+          adults?: number | null
+          children?: number | null
+          notes?: string | null
+          source: string
+          itinerary_url?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          package_title?: string
+          package_id?: string | null
+          name?: string | null
+          email?: string | null
+          phone?: string | null
+          travel_date?: string | null
+          travel_date_from?: string | null
+          travel_date_to?: string | null
+          budget_per_person?: string | null
+          needs?: string[] | null
+          adults?: number | null
+          children?: number | null
+          notes?: string | null
+          source?: string
+          itinerary_url?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

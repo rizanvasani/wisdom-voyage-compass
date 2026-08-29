@@ -1,4 +1,4 @@
-
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,48 +11,25 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { getDestinations, PopularDestination, DEFAULT_DESTINATIONS } from '@/lib/supabase-services';
 
 const PopularDestinations = () => {
   const navigate = useNavigate();
+  const [destinations, setDestinations] = useState<PopularDestination[]>(DEFAULT_DESTINATIONS);
 
-  const destinations = [
-    {
-      id: 'swiss-alps',
-      name: 'The Swiss Alps',
-      location: 'Bernese Oberland, Switzerland',
-      price: '₹1.5L',
-      rating: 4.9,
-      reviews: 842,
-      image: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      tag: 'Luxury Escape',
-      duration: '7 Days',
-      description: 'Experience the majesty of snow-capped peaks and crystal alpine lakes in the heart of Europe.'
-    },
-    {
-      id: 'bali-paradise',
-      name: 'Bali Retreat',
-      location: 'Ubud, Indonesia',
-      price: '₹85K',
-      rating: 4.8,
-      reviews: 1250,
-      image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      tag: 'Tropical Zen',
-      duration: '6 Days',
-      description: 'Discover the perfect blend of spiritual heritage, lush jungles, and pristine emerald beaches.'
-    },
-    {
-      id: 'iceland-aurora',
-      name: 'Nordic Aurora',
-      location: 'Reykjavík, Iceland',
-      price: '₹2.1L',
-      rating: 4.9,
-      reviews: 615,
-      image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      tag: 'Arctic Adventure',
-      duration: '8 Days',
-      description: 'Embark on a surreal journey through volcanic landscapes, glaciers, and the dancing Northern Lights.'
+  useEffect(() => {
+    async function loadLiveDestinations() {
+      try {
+        const data = await getDestinations();
+        if (data && data.length > 0) {
+          setDestinations(data);
+        }
+      } catch (err) {
+        console.error('Error fetching Supabase destinations:', err);
+      }
     }
-  ];
+    loadLiveDestinations();
+  }, []);
 
   return (
     <section className="relative flex flex-col justify-center bg-white py-16 lg:py-24 overflow-x-hidden no-scrollbar">

@@ -2,16 +2,37 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = "https://fnqgouwdzgryyyorgvte.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZucWdvdXdkemdyeXl5b3JndnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1Mzc2MjAsImV4cCI6MjA3MTExMzYyMH0.-Id44Ccg2uWhdDx6FP4W_Qv-e5dbQDFAGox_wOcJwlk";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://evbyakybmoezpqqlcogs.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_uyb5KRbnF37c-SnhqWIrIQ_XdEOfqku";
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+// Clear all stale Supabase auth tokens from localStorage to prevent invalid Bearer token errors
+if (typeof window !== 'undefined' && window.localStorage) {
+  try {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('sb-')) {
+        keysToRemove.push(k);
+      }
+    }
+    keysToRemove.forEach((k) => localStorage.removeItem(k));
+  } catch (e) {
+    // Ignore storage errors
+  }
+}
+
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  global: {
+    headers: {
+      apikey: SUPABASE_PUBLISHABLE_KEY,
+    },
+  },
   auth: {
     storage: localStorage,
-    persistSession: true,
-    autoRefreshToken: true,
+    persistSession: false,
+    autoRefreshToken: false,
   }
 });
