@@ -51,25 +51,11 @@ const App = () => (
           <Route path="/checkout" element={<Checkout />} />
           {/* <Route path="/my-bookings" element={<MyBookings />} /> */}
 
-          {/* Admin Portal Routes */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/admin/*" element={<Navigate to="/admin/login" replace />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
+          {/* Admin Portal Routes (Passcode Removed) */}
+          <Route path="/admin/login" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="/admin/admin/*" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

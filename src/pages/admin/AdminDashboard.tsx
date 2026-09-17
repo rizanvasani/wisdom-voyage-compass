@@ -33,6 +33,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import SEO from '@/components/SEO';
+import { clearAdminSession, getAdminUser } from '@/lib/admin-auth';
 import {
   getPackages,
   createPackage,
@@ -55,6 +56,7 @@ import {
 
 export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const adminUser = getAdminUser();
   const [activeTab, setActiveTab] = useState<'packages' | 'destinations' | 'inquiries' | 'database'>('packages');
 
   // State arrays
@@ -131,9 +133,9 @@ export const AdminDashboard: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('wisdom_admin_session');
-    toast.info('Logged out of admin portal');
-    navigate('/admin/login');
+    clearAdminSession();
+    toast.info('Exited admin portal');
+    navigate('/');
   };
 
   // --- PACKAGE ACTIONS ---
@@ -498,6 +500,13 @@ CREATE POLICY "Full Access Enquiries" ON public.enquiries FOR ALL USING (true) W
           </div>
 
           <div className="flex items-center gap-3">
+            {adminUser && (
+              <div className="hidden sm:flex items-center gap-2 bg-slate-800/90 px-3.5 py-1.5 rounded-xl border border-slate-700 text-xs">
+                <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="font-mono text-emerald-300 text-[11px] font-bold">{adminUser.email}</span>
+              </div>
+            )}
+
             <a
               href="/"
               target="_blank"
