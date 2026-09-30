@@ -359,9 +359,9 @@ const Contact = () => {
                         onClick={() => window.open('https://www.google.com/maps/place/Wisdom+Travel+and+Tours/@19.0897983,72.8377711,17z/data=!3m1!4b1!4m6!3m5!1s0x3be7c933d62324e3:0x6d5203898e11bf83!8m2!3d19.0897983!4d72.8377711!16s%2Fg%2F11j014gg7_', '_blank')}
                         className="text-xs text-slate-500 leading-relaxed text-left hover:text-primary transition-colors"
                       >
-                        G-14, Ground Floor, Dheeraj Heritage,<br />
-                        S.V. Road Junction, Santacruz West,<br />
-                        Mumbai 400-054
+                        4th Floor, Dheeraj Heritage, 412,<br />
+                        Swami Vivekanand Rd, near Milan Subway,<br />
+                        Junction, Santacruz (West), Mumbai 400054
                       </button>
                     )
                   },

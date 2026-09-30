@@ -100,8 +100,9 @@ const Footer = () => {
                   <MapPin className="w-3 h-3 text-red-400" />
                 </div>
                 <span className="leading-relaxed">
-                  Dheeraj Heritage, G-14, Swami Vivekananda Rd,<br />
-                  Santacruz (West), Mumbai - 400054
+                  4th Floor, Dheeraj Heritage, 412, Swami Vivekanand Rd,<br />
+                  near Milan Subway, Junction, Santacruz (West),<br />
+                  Mumbai, Maharashtra 400054
                 </span>
               </button>
             </div>

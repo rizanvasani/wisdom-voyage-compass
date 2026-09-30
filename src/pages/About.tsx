@@ -34,7 +34,8 @@ const About = () => {
       name: 'Riyaz Vasani',
       role: 'Managing Partner',
       experience: '30+ years',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: '/images/team/riyaz-vasani.jpg',
+      fallbackImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
       description: 'Passionate travel enthusiast with extensive experience in hospitality and tourism.',
       quote: 'Travel is the only thing you can buy that makes you richer.',
     },
@@ -42,7 +43,8 @@ const About = () => {
       name: 'Sohail Rupani',
       role: 'Managing Partner',
       experience: '25+ years',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: '/images/team/sohail-rupani.jpg',
+      fallbackImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
       description: 'Expert in travel operations and ticketing, ensuring seamless travel experiences.',
       quote: 'Every journey begins with the courage to take the first step.',
     },
@@ -50,7 +52,8 @@ const About = () => {
       name: 'Rizan Vasani',
       role: 'Senior Associate',
       experience: '2+ years',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: '/images/team/rizan-vasani.jpg',
+      fallbackImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
       description: 'Specialist in corporate ticketing with deep knowledge of group travel management.',
       quote: 'The world is a book — those who don\'t travel read only one page.',
     },
@@ -117,7 +120,7 @@ const About = () => {
 
               <div className="flex items-center gap-2 text-slate-500 text-sm">
                 <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
-                Dheeraj Heritage, Santacruz (West), Mumbai
+                4th Floor, Dheeraj Heritage, 412, Swami Vivekanand Rd, Santacruz (West), Mumbai
               </div>
 
               <div className="flex flex-wrap gap-3">
@@ -307,6 +310,12 @@ const About = () => {
                   <img
                     src={member.image}
                     alt={member.name}
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== member.fallbackImage) {
+                        target.src = member.fallbackImage;
+                      }
+                    }}
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -443,12 +452,18 @@ const About = () => {
                 {/* Social proof row */}
                 <div className="flex items-center gap-4 mt-6 justify-center lg:justify-start">
                   <div className="flex -space-x-2">
-                    {['photo-1472099645785-5658abf4ff4e', 'photo-1507003211169-0a1dd7228f2d', 'photo-1500648767791-00dcc994a43e'].map((id, i) => (
+                    {team.map((member, i) => (
                       <img
                         key={i}
-                        src={`https://images.unsplash.com/${id}?ixlib=rb-4.0.3&auto=format&fit=crop&w=60&q=80`}
+                        src={member.image}
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (target.src !== member.fallbackImage) {
+                            target.src = member.fallbackImage;
+                          }
+                        }}
                         className="w-8 h-8 rounded-full border-2 border-primary object-cover"
-                        alt=""
+                        alt={member.name}
                       />
                     ))}
                   </div>
