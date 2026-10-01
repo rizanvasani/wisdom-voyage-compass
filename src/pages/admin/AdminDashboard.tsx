@@ -134,8 +134,8 @@ export const AdminDashboard: React.FC = () => {
 
   const handleLogout = () => {
     clearAdminSession();
-    toast.info('Exited admin portal');
-    navigate('/');
+    toast.info('Logged out from admin portal');
+    navigate('/admin/login');
   };
 
   // --- PACKAGE ACTIONS ---
