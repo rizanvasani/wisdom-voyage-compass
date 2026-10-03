@@ -4,20 +4,25 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-serve(async (req) => {
+serve(async (req: Request) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { passport, destination } = await req.json();
-    
-    if (!passport || !destination) {
+    let body: any;
+    try {
+      body = await req.json();
+    } catch {
       return new Response(
-        JSON.stringify({ error: 'Passport and destination country codes are required' }),
+        JSON.stringify({
+          error: 'INVALID',
+          message: 'Invalid request payload. Expected JSON body with passport and destination.'
+        }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -25,11 +30,37 @@ serve(async (req) => {
       );
     }
 
-    const rapidApiKey = Deno.env.get('RAPIDAPI_KEY');
-    if (!rapidApiKey) {
-      console.error('RAPIDAPI_KEY not found in environment');
+    const { passport, destination } = body || {};
+
+    // Validate that passport and destination are present 3-letter ISO alpha-3 codes
+    const isThreeLetterCode = (val: unknown): val is string =>
+      typeof val === 'string' && /^[A-Za-z]{3}$/.test(val.trim());
+
+    if (!isThreeLetterCode(passport) || !isThreeLetterCode(destination)) {
       return new Response(
-        JSON.stringify({ error: 'API configuration error' }),
+        JSON.stringify({
+          error: 'INVALID',
+          message: 'Passport and destination must be valid 3-letter ISO country codes (e.g. IND, FRA, JPN).'
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const passportCode = passport.trim().toUpperCase();
+    const destinationCode = destination.trim().toUpperCase();
+
+    // Read ORIZN_API_KEY from environment secret
+    const oriznApiKey = Deno.env.get('ORIZN_API_KEY');
+    if (!oriznApiKey) {
+      console.error('ORIZN_API_KEY secret is not set in environment.');
+      return new Response(
+        JSON.stringify({
+          error: 'SERVER',
+          message: 'Visa API configuration error on server.'
+        }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -37,43 +68,66 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Checking visa requirement for passport: ${passport}, destination: ${destination}`);
+    // Call Orizn Visa API (always lang=en as required by free tier)
+    const oriznUrl = `https://visa.orizn.app/api/v1/visa?passport=${encodeURIComponent(passportCode)}&destination=${encodeURIComponent(destinationCode)}&lang=en`;
 
-    const formData = new FormData();
-    formData.append('passport', passport);
-    formData.append('destination', destination);
-
-    const response = await fetch('https://visa-requirement.p.rapidapi.com/', {
-      method: 'POST',
+    const oriznRes = await fetch(oriznUrl, {
+      method: 'GET',
       headers: {
-        'X-RapidAPI-Key': rapidApiKey,
-        'X-RapidAPI-Host': 'visa-requirement.p.rapidapi.com'
+        'x-api-key': oriznApiKey,
+        'Accept': 'application/json',
       },
-      body: formData,
     });
 
-    if (!response.ok) {
-      console.error(`API response error: ${response.status} ${response.statusText}`);
+    if (oriznRes.ok) {
+      const oriznJson = await oriznRes.json();
+      // Orizn response shape: { data: { passport, destination, requirement, ... } }
+      const payloadData = oriznJson?.data || oriznJson;
       return new Response(
-        JSON.stringify({ error: 'Failed to fetch visa requirements' }),
+        JSON.stringify({ data: payloadData }),
         {
-          status: response.status,
+          status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
-    const data = await response.json();
-    console.log('Visa requirement data:', data);
+    // Handle and normalize error responses
+    const status = oriznRes.status;
+    let errorType: 'NO_DATA' | 'QUOTA' | 'INVALID' | 'SERVER' = 'SERVER';
+    let errorMessage = 'Visa lookup is busy right now, please try again shortly or contact our team.';
 
-    return new Response(JSON.stringify(data), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    if (status === 404) {
+      errorType = 'NO_DATA';
+      errorMessage = "We don't have confirmed data for this route yet — our visa team can help.";
+    } else if (status === 429) {
+      errorType = 'QUOTA';
+      errorMessage = 'Visa lookup is busy right now, please try again shortly or contact our team.';
+    } else if (status === 400 || status === 401 || status === 403) {
+      errorType = 'INVALID';
+      errorMessage = status === 400
+        ? 'Invalid country code or unsupported language.'
+        : 'Authentication error connecting to visa service.';
+    }
 
-  } catch (error) {
-    console.error('Error in visa-requirement function:', error);
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({
+        error: errorType,
+        message: errorMessage
+      }),
+      {
+        status: status >= 400 && status < 600 ? status : 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+
+  } catch (err: any) {
+    console.error('Unhandled error in visa-requirement edge function:', err);
+    return new Response(
+      JSON.stringify({
+        error: 'SERVER',
+        message: 'Visa lookup is busy right now, please try again shortly or contact our team.'
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
